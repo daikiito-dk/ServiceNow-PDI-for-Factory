@@ -8,18 +8,51 @@ ServiceNow Studio で作成したアプリをこのリポジトリでバージ�
 ```
 ServiceNow-PDI-for-Factory/
 ├── README.md            # このファイル
+├── scripts/
+│   ├── snow_api.py      # ServiceNow REST APIヘルパー(認証は.envから読込)
+│   └── inspect_app.py   # アプリ構成スナップショット取得・レポート生成
 ├── update-sets/         # ServiceNowからエクスポートしたUpdate Set / アプリケーションXML
 ├── docs/                # 設計ドキュメント・仕様
-│   └── app-design.md    # アプリ設計(テーブル・フロー・画面の定義)
+│   ├── app-design.md    # アプリ設計(手動で管理する設計書)
+│   ├── app-snapshot.json # アプリ構成の生データ(自動生成・差分追跡用)
+│   └── app-inventory.md  # アプリ構成一覧(自動生成・人が読む用)
 └── .gitignore           # .env(接続情報)等の管理対象外ファイル
 ```
+
+## セットアップ
+
+1. リポジトリ直下に `.env` を作成(Git管理外):
+
+   ```
+   SN_INSTANCE=dev274447.service-now.com
+   SN_USER=admin
+   SN_PASSWORD=<PDIの管理者パスワード>
+   SN_APP_SYS_ID=<Studioアプリ(sys_app)のsys_id>
+   ```
+
+2. アプリの構成を取得:
+
+   ```
+   python3 scripts/inspect_app.py
+   ```
+
+   PDI上のアプリ構成(テーブル・フィールド・ビジネスルール・ACL・フロー等)を
+   `docs/app-snapshot.json`(生データ)と `docs/app-inventory.md`(一覧)に書き出す。
+   PDI側で変更した後にもう一度実行すれば、git diff で変更箇所を確認できる。
+
+   レポートだけ再生成する場合(API接続不要):
+
+   ```
+   python3 scripts/inspect_app.py --report-only
+   ```
 
 ## 開発ワークフロー
 
 1. ServiceNow Studio でアプリに変更を加える
-2. 変更を Update Set(またはアプリケーションXML)としてエクスポートする
-3. XML ファイルを `update-sets/` に保存してコミットする
-4. XML を解析して差分や構成を確認し、次の開発タスクを計画する
+2. `python3 scripts/inspect_app.py` でスナップショットを取得し、git diff で変更を確認
+3. 大きな変更は Update Set(またはアプリケーションXML)としてもエクスポートし、
+   XML ファイルを `update-sets/` に保存してコミットする
+4. 次の開発タスクを計画する
 
 ## アプリのエクスポート手順(スコープドアプリの場合)
 
