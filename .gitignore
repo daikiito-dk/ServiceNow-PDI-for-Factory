@@ -1,0 +1,16 @@
+# ServiceNow接続情報(絶対にコミットしない)
+.env
+*.env
+
+# macOS
+.DS_Store
+
+# 一時ファイル・エディタ
+*.tmp
+*.bak
+.vscode/
+.idea/
+
+# ダウンロードの重複ファイル(エクスポートやり直し時)
+update-sets/*(1).xml
+update-sets/*copy*.xml
