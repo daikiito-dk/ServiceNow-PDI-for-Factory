@@ -10,7 +10,8 @@ ServiceNow-PDI-for-Factory/
 ├── README.md            # このファイル
 ├── scripts/
 │   ├── snow_api.py      # ServiceNow REST APIヘルパー(認証は.envから読込)
-│   └── inspect_app.py   # アプリ構成スナップショット取得・レポート生成
+│   ├── inspect_app.py   # アプリ構成スナップショット取得・レポート生成(Basic認証)
+│   └── snapshot_via_browser.py # ブラウザセッション経由のスナップショット取得(PW不要)
 ├── update-sets/         # ServiceNowからエクスポートしたUpdate Set / アプリケーションXML
 ├── docs/                # 設計ドキュメント・仕様
 │   ├── app-design.md    # アプリ設計(手動で管理する設計書)
@@ -44,6 +45,15 @@ ServiceNow-PDI-for-Factory/
 
    ```
    python3 scripts/inspect_app.py --report-only
+   ```
+
+   Basic認証が使えない場合(パスワードをファイルに置きたくない等)は、
+   ブラウザでServiceNowにログインした状態で以下を実行する
+   (Factoryの埋め込みブラウザペインでログイン済みなら自動でそれを使う。
+   パスワードの扱いは一切不要):
+
+   ```
+   python3 scripts/snapshot_via_browser.py
    ```
 
 ## 開発ワークフロー
