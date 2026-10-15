@@ -8,10 +8,13 @@ ServiceNow Studio で作成したアプリをこのリポジトリでバージ�
 ```
 ServiceNow-PDI-for-Factory/
 ├── README.md            # このファイル
+├── app/
+│   └── phase1/          # PDIに適用するレコード定義(manifest.json)とスクリプト本体
 ├── scripts/
 │   ├── snow_api.py      # ServiceNow REST APIヘルパー(認証は.envから読込)
 │   ├── inspect_app.py   # アプリ構成スナップショット取得・レポート生成(Basic認証)
-│   └── snapshot_via_browser.py # ブラウザセッション経由のスナップショット取得(PW不要)
+│   ├── snapshot_via_browser.py # ブラウザセッション経由のスナップショット取得(PW不要)
+│   └── apply_records.py # manifest.json のレコードをアプリのスコープでPDIに適用(べき等)
 ├── update-sets/         # ServiceNowからエクスポートしたUpdate Set / アプリケーションXML
 ├── docs/                # 設計ドキュメント・仕様
 │   ├── app-design.md    # アプリ設計(手動で管理する設計書)
@@ -55,6 +58,20 @@ ServiceNow-PDI-for-Factory/
    ```
    python3 scripts/snapshot_via_browser.py
    ```
+
+## リポジトリからPDIへの変更適用
+
+ブラウザでServiceNowにログインした状態で実行する:
+
+```
+python3 scripts/apply_records.py app/phase1/manifest.json
+```
+
+- 適用前に、セッションの「現在のアプリ」を対象アプリに自動で切り替える。
+  Table APIはリクエストで指定した `sys_scope` を無視し、セッションの現在のアプリで
+  スコープを決めるため、この切り替えをしないとglobalスコープに作成されてしまう。
+- `lookup` に一致するレコードがあれば更新し、なければ作成する。何度実行しても結果は同じ。
+- 適用後は `python3 scripts/snapshot_via_browser.py` を実行し、`git diff` で差分を確認する。
 
 ## 開発ワークフロー
 

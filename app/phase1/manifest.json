@@ -1,0 +1,50 @@
+{
+  "comment": "フェーズ1でPDIに適用するレコード定義。__APP__ は適用時にアプリ(sys_app)のsys_idに置換される。レコードのスコープはAPIのフィールド指定では決まらず、適用前に切り替えるセッションの現在アプリで決まる(apply_records.py が自動で切り替える)。",
+  "records": [
+    {
+      "table": "sys_properties",
+      "lookup": { "name": "x_2221323_loan_p_0.max_request_amount", "sys_scope": "__APP__" },
+      "fields": {
+        "name": "x_2221323_loan_p_0.max_request_amount",
+        "value": "100000000",
+        "type": "integer",
+        "description": "融資事前審査の融資希望金額上限(JPY)。入力検証ビジネスルールが参照する。",
+        "is_private": false
+      }
+    },
+    {
+      "table": "sys_script",
+      "lookup": { "name": "融資事前審査 入力検証", "collection": "x_2221323_loan_p_0_request", "sys_scope": "__APP__" },
+      "fields": {
+        "name": "融資事前審査 入力検証",
+        "collection": "x_2221323_loan_p_0_request",
+        "when": "before",
+        "order": 100,
+        "active": true,
+        "advanced": true,
+        "action_insert": true,
+        "action_update": true,
+        "condition": ""
+      },
+      "script_file": "br_validate_request.js",
+      "script_fields": ["script"]
+    },
+    {
+      "table": "sys_script",
+      "lookup": { "name": "融資事前審査 ステータス遷移の強制", "collection": "x_2221323_loan_p_0_request", "sys_scope": "__APP__" },
+      "fields": {
+        "name": "融資事前審査 ステータス遷移の強制",
+        "collection": "x_2221323_loan_p_0_request",
+        "when": "before",
+        "order": 200,
+        "active": true,
+        "advanced": true,
+        "action_insert": false,
+        "action_update": true,
+        "condition": ""
+      },
+      "script_file": "br_enforce_status.js",
+      "script_fields": ["script"]
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 > このファイルは `scripts/inspect_app.py` が自動生成します。手動で編集しないでください。
 
-- 生成日時(UTC): 2026-10-15T14:19:44.833Z
+- 生成日時(UTC): 2026-10-15T14:35:39.581Z
 - インスタンス: dev274447.service-now.com
 - アプリ: Loan Pre-Screening Management (scope: `x_2221323_loan_p_0`, version: 1.0.0)
 
@@ -36,9 +36,12 @@
 
 > スクリプト本文は `docs/app-snapshot.json` に含まれます。
 
-## ビジネスルール(0件)
+## ビジネスルール(2件)
 
-なし
+| name | collection | when | condition | active |
+|---|---|---|---|---|
+| `融資事前審査 ステータス遷移の強制` | `x_2221323_loan_p_0_request` | before | - | true |
+| `融資事前審査 入力検証` | `x_2221323_loan_p_0_request` | before | - | true |
 
 ## クライアントスクリプト(0件)
 
@@ -72,7 +75,7 @@
   - Test (type: flow, active: false)
   - 高額融資 二段階承認 (High-Value Loan Two-Stage Approval) (type: flow, active: true)
 - モジュール: 0件
-- システムプロパティ: 0件
+- システムプロパティ: 1件 (x_2221323_loan_p_0.max_request_amount)
 - UIページ: 0件
 - UIマクロ: 0件
 - メール通知: 0件

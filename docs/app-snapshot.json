@@ -1,6 +1,6 @@
 {
   "instance": "dev274447.service-now.com",
-  "fetched_at": "2026-10-15T14:19:44.833Z",
+  "fetched_at": "2026-10-15T14:35:39.581Z",
   "app": {
     "sys_id": "ea814ae7833f8310d9ffe270ceaad302",
     "short_description": "銀行・金融機関向けの融資事前審査リクエスト管理アプリケーション。営業担当者が融資事前審査申請を登録し、審査部門がリスク評価・承認判定を行う。1,000万円以上は二段階承認へルーティング。",
@@ -15,7 +15,7 @@
     "テーブル": 1,
     "フィールド": 9,
     "ラベル": 15,
-    "ビジネスルール": 0,
+    "ビジネスルール": 2,
     "クライアントスクリプト": 0,
     "スクリプトインクルード": 0,
     "UIアクション": 0,
@@ -26,7 +26,7 @@
     "UIページ": 0,
     "UIマクロ": 0,
     "メール通知": 0,
-    "システムプロパティ": 0,
+    "システムプロパティ": 1,
     "フロー": 2,
     "選択肢": 13
   },
@@ -282,7 +282,28 @@
         "element": "approver"
       }
     ],
-    "sys_script": [],
+    "sys_script": [
+      {
+        "sys_id": "0427010883401310d9ffe270ceaad322",
+        "condition": "",
+        "name": "融資事前審査 ステータス遷移の強制",
+        "active": "true",
+        "collection": "x_2221323_loan_p_0_request",
+        "when": "before",
+        "script": "/**\n * ステータス遷移の強制(roadmap 1-2)\n * テーブル: x_2221323_loan_p_0_request / タイミング: before update\n *\n * ルール:\n *  - ステータス変更は審査担当者(loan_underwriter)のみ可能\n *  - 許可される遷移:\n *      received    -> reviewing | rejected\n *      reviewing   -> conditional | approved | rejected\n *      conditional -> approved | rejected\n *    (approved / rejected は終点)\n */\n(function executeRule(current, previous /*null when async*/) {\n\n  // GlideElement のままだと == / indexOf が値ではなくオブジェクト比較になるため文字列化する\n  var from = String(previous ? previous.status : current.status);\n  var to = String(current.status);\n  if (from == to) {\n    return; // ステータス変更なし\n  }\n\n  if (!gs.hasRole('x_2221323_loan_p_0.loan_underwriter')) {\n    gs.addErrorMessage('ステータスの変更は審査担当者のみ行えます。');\n    current.setAbortAction(true);\n    return;\n  }\n\n  var allowed = {\n    received: ['reviewing', 'rejected'],\n    reviewing: ['conditional', 'approved', 'rejected'],\n    conditional: ['approved', 'rejected']\n  };\n\n  if (!allowed[from] || allowed[from].indexOf(to) < 0) {\n    gs.addErrorMessage('ステータスを「' + from + '」から「' + to + '」へ変更することはできません。');\n    current.setAbortAction(true);\n  }\n\n})(current, previous);\n",
+        "order": "200"
+      },
+      {
+        "sys_id": "0427cdc483401310d9ffe270ceaad3f7",
+        "condition": "",
+        "name": "融資事前審査 入力検証",
+        "active": "true",
+        "collection": "x_2221323_loan_p_0_request",
+        "when": "before",
+        "script": "/**\n * 融資事前審査 入力検証(roadmap 1-1)\n * テーブル: x_2221323_loan_p_0_request / タイミング: before insert & update\n *\n * 検証内容:\n *  - 融資希望金額は 0 < 金額 <= 上限プロパティ(x_2221323_loan_p_0.max_request_amount)\n *  - 年収は未入力可、入力する場合は 0 より大きい\n *  - 顧客名は空白以外必須\n */\n(function executeRule(current, previous /*null when async*/) {\n\n  var MAX = parseInt(gs.getProperty('x_2221323_loan_p_0.max_request_amount', '100000000'), 10);\n\n  // GlideElement は空でもオブジェクトとして truthy になるため、必ず文字列化して判定する\n  var amount = parseFloat(String(current.requested_amount) || 0);\n  if (!(amount > 0)) {\n    gs.addErrorMessage('融資希望金額は0より大きい金額を入力してください。');\n    current.setAbortAction(true);\n  } else if (amount > MAX) {\n    gs.addErrorMessage('融資希望金額が上限(' + MAX + '円)を超えています。');\n    current.setAbortAction(true);\n  }\n\n  if (!current.annual_income.nil() && !(parseFloat(String(current.annual_income)) > 0)) {\n    gs.addErrorMessage('年収は0より大きい金額を入力してください。');\n    current.setAbortAction(true);\n  }\n\n  if (!String(current.customer_name || '').trim()) {\n    gs.addErrorMessage('顧客名は必須です。');\n    current.setAbortAction(true);\n  }\n\n})(current, previous);\n",
+        "order": "100"
+      }
+    ],
     "sys_script_client": [],
     "sys_script_include": [],
     "sys_ui_action": [],
@@ -464,7 +485,33 @@
     "sys_ui_page": [],
     "sys_ui_macro": [],
     "sysevent_email_action": [],
-    "sys_properties": [],
+    "sys_properties": [
+      {
+        "is_private": "false",
+        "ignore_cache": "false",
+        "sys_mod_count": "0",
+        "description": "融資事前審査の融資希望金額上限(JPY)。入力検証ビジネスルールが参照する。",
+        "sys_updated_on": "2026-10-15 14:34:04",
+        "suffix": "max_request_amount",
+        "sys_tags": "",
+        "type": "integer",
+        "sys_class_name": "sys_properties",
+        "sys_id": "0e1709c483401310d9ffe270ceaad304",
+        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_update_name": "sys_properties_0e1709c483401310d9ffe270ceaad304",
+        "sys_updated_by": "admin",
+        "write_roles": "",
+        "sys_created_on": "2026-10-15 14:34:04",
+        "name": "x_2221323_loan_p_0.max_request_amount",
+        "read_roles": "",
+        "sys_name": "x_2221323_loan_p_0.max_request_amount",
+        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
+        "choices": "",
+        "value": "100000000",
+        "sys_created_by": "admin",
+        "sys_policy": ""
+      }
+    ],
     "sys_hub_flow": [
       {
         "sys_id": "aec1b896324846d8984ca56083754348",
