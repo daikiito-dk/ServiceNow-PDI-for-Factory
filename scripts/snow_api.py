@@ -63,8 +63,16 @@ def request(method, path, payload=None, query=None):
 
     try:
         with urllib.request.urlopen(req, timeout=60) as resp:
-            body = resp.read().decode()
-            return json.loads(body) if body else {}
+            body = resp.read().decode(errors="replace")
+            if not body:
+                return {}
+            try:
+                return json.loads(body)
+            except json.JSONDecodeError:
+                raise ApiError(
+                    f"HTTP {resp.status} ({resp.headers.get('Content-Type', '?')}): "
+                    f"JSON以外の応答が返りました。応答先頭: {body[:200]!r}"
+                )
     except urllib.error.HTTPError as e:
         detail = e.read().decode(errors="replace")
         raise ApiError(f"HTTP {e.code}: {detail[:500]}")
