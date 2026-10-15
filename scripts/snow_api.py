@@ -25,7 +25,12 @@ class ApiError(Exception):
 
 
 def load_env():
-    """リポジトリ直下の .env を読み込む。存在しない場合はエラー。"""
+    """リポジトリ直下の .env を読み込む。存在しない場合はエラー。
+
+    値を引用符(" または ')で囲んだ書き方(SN_PASSWORD="xxx")は
+    引用符をパスワードの一部として扱ってしまうため、外側の一致する
+    引用符ペアは自動で取り除く。
+    """
     path = os.path.join(ROOT, ".env")
     if not os.path.exists(path):
         raise ApiError(".env が見つかりません。リポジトリ直下に .env を作成してください。")
@@ -35,7 +40,10 @@ def load_env():
             line = line.strip()
             if line and not line.startswith("#") and "=" in line:
                 key, value = line.split("=", 1)
-                env[key.strip()] = value.strip()
+                value = value.strip()
+                if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+                    value = value[1:-1]
+                env[key.strip()] = value
     return env
 
 
