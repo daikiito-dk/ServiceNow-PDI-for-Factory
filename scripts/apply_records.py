@@ -1,92 +1,83 @@
 #!/usr/bin/env python3
-"""マニフェストで定義したレコードをブラウザセッション経由でPDIに適用する。
+"""マニフェストで定義したレコードを、アプリのスコープで PDI に適用する(べき等)。
 
 使い方:
-    python3 scripts/apply_records.py app/phase1/manifest.json
+    python3 scripts/apply_records.py app/phase1/manifest.json [app_sys_id]
 
-前提:
-    - Factoryの埋め込みブラウザペイン(またはagent-browserのセッション)で
-      ServiceNowにログイン済みであること。API呼び出しはそのセッションの
-      X-UserToken(g_ck)を使うため、パスワードを扱わない。
+通信は scripts/sn_client.py を使う(.env の連携ユーザーで Basic 認証。
+SN_TRANSPORT=browser ならログイン済みブラウザ経由)。
 
 マニフェスト形式(app/phase1/manifest.json 参照):
     {
       "records": [
         {
           "table": "sys_script",
-          "lookup": {"name": "...", "collection": "..."},   # 既存チェック用
+          "lookup": {"name": "...", "collection": "...", "sys_scope": "__APP__"},  # 既存チェック用
           "fields": {...},                                  # 作成/更新する値
-          "script_file": "br_xxx.js",                        # 省略可。相対パス
-          "script_fields": ["script", "action"]             # script_file の内容を入れる欄
+          "script_file": "br_xxx.js",                        # 省略可。マニフェストからの相対パス
+          "script_fields": ["script"]                       # script_file の内容を入れる欄
         }
       ]
     }
 
-    - "__APP__" は適用時にアプリ(sys_app)のsys_idに置換される
-    - lookup に一致するレコードがあれば更新(PUT)、なければ作成(POST)。
-      何度実行しても同じ結果になる(べき等)。
+    - "__APP__" は適用時にアプリ(sys_app)の sys_id に置換される
+    - "id": "<key>" を付けたレコードの sys_id は、後続レコードで "{{id:<key>}}" として参照できる
+    - "{{role:<ロール名>}}" はロールの sys_id に置換される
+    - lookup に一致するレコードがあれば更新(PUT)、なければ作成(POST)
+    - 適用後に各レコードのスコープを検証し、アプリ以外なら失敗にする
 
-注意:
-    - 実行後は scripts/snapshot_via_browser.py でスナップショットを再取得し、
-      git diff で意図した差分かを確認すること。
+実行後は scripts/inspect_app.py でスナップショットを再取得し、git diff で差分を確認すること。
 """
 
 import json
 import os
-import subprocess
+import re
 import sys
 from urllib.parse import quote
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, os.path.join(ROOT, "scripts"))
-from snow_api import load_env  # noqa: E402
-
-CALL_JS_TEMPLATE = r"""
-(async () => {
-  const r = await fetch(%(path)s, {method: %(method)s, credentials: "include",
-    headers: {Accept: "application/json", "Content-Type": "application/json", "X-UserToken": window.g_ck},
-    body: %(body)s});
-  const t = await r.text();
-  let j = null;
-  try { j = JSON.parse(t); } catch (e) {}
-  return JSON.stringify({status: r.status, body: j});
-})()
-"""
-
-
-def api_call(method, path, payload=None):
-    js = CALL_JS_TEMPLATE % {
-        "path": json.dumps(path),
-        "method": json.dumps(method),
-        "body": "null" if payload is None else json.dumps(json.dumps(payload)),
-    }
-    cdp = os.environ.get("AGENT_BROWSER_CDP")
-    cmd = ["agent-browser"]
-    if cdp and os.environ.get("FACTORY_DESKTOP_CDP_PORT"):
-        cmd += ["--cdp", cdp]
-    else:
-        cmd += ["--session", "snow-snapshot", "--headed"]
-    cmd += ["eval", "--stdin"]
-    proc = subprocess.run(cmd, input=js, capture_output=True, text=True, timeout=60)
-    if proc.returncode != 0:
-        sys.exit(f"ERROR: agent-browser 失敗: {proc.stderr.strip()[:400]}")
-    raw = proc.stdout.strip()
-    try:
-        result = json.loads(json.loads(raw))
-    except json.JSONDecodeError:
-        sys.exit(f"ERROR: ブラウザの応答を解釈できません: {raw[:200]!r}")
-    return result
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from sn_client import SnError, call, env, error_message, set_current_app  # noqa: E402
 
 
 def query_string(lookup):
     return "^".join(f"{k}={quote(str(v), safe='')}" for k, v in lookup.items())
 
 
-def apply_record(record, app_id, manifest_dir):
+_role_ids = {}
+
+
+def resolve(value, app_id, ids):
+    """プレースホルダーを sys_id に置き換える。
+
+    __APP__        アプリの sys_id
+    {{id:<key>}}   同じマニフェスト内で "id": "<key>" を付けたレコードの sys_id
+    {{role:<name>}} ロール名から引いた sys_user_role の sys_id
+    """
+    if not isinstance(value, str):
+        return value
+    value = value.replace("__APP__", app_id)
+    for match in re.findall(r"\{\{(id|role):([^}]+)\}\}", value):
+        kind, key = match
+        if kind == "id":
+            if key not in ids:
+                raise SnError(f"{{{{id:{key}}}}} が未定義です(参照先のレコードを先に記述してください)")
+            sys_id = ids[key]
+        else:
+            if key not in _role_ids:
+                status, body = call("GET", f"/api/now/table/sys_user_role?sysparm_query=name={key}&sysparm_fields=sys_id")
+                found = (body or {}).get("result") or []
+                if status != 200 or not found:
+                    raise SnError(f"ロール {key} が見つかりません")
+                _role_ids[key] = found[0]["sys_id"]
+            sys_id = _role_ids[key]
+        value = value.replace(f"{{{{{kind}:{key}}}}}", sys_id)
+    return value
+
+
+def apply_record(record, app_id, manifest_dir, ids):
     table = record["table"]
-    lookup = {k: str(v).replace("__APP__", app_id) for k, v in record.get("lookup", {}).items()}
-    fields = {k: (v.replace("__APP__", app_id) if isinstance(v, str) else v)
-              for k, v in record["fields"].items()}
+    lookup = {k: resolve(str(v), app_id, ids) for k, v in record.get("lookup", {}).items()}
+    fields = {k: resolve(v, app_id, ids) for k, v in record["fields"].items()}
 
     script_file = record.get("script_file")
     if script_file:
@@ -96,28 +87,29 @@ def apply_record(record, app_id, manifest_dir):
             fields[field] = code
 
     path = f"/api/now/table/{table}"
-    existing = api_call("GET", f"{path}?sysparm_query={query_string(lookup)}"
-                              "&sysparm_limit=1&sysparm_fields=sys_id")
-    if existing["status"] != 200:
-        sys.exit(f"ERROR: {table} の既存チェックに失敗: {json.dumps(existing['body'], ensure_ascii=False)[:300]}")
+    status, body = call("GET", f"{path}?sysparm_query={query_string(lookup)}&sysparm_limit=1&sysparm_fields=sys_id")
+    if status != 200:
+        raise SnError(f"{table} の既存チェックに失敗: HTTP {status} {error_message(body)}")
 
-    found = (existing["body"] or {}).get("result") or []
+    found = (body or {}).get("result") or []
     if found:
         sys_id = found[0]["sys_id"]
-        result = api_call("PUT", f"{path}/{sys_id}", fields)
+        status, body = call("PUT", f"{path}/{sys_id}?sysparm_exclude_reference_link=true", fields)
         action = "更新"
     else:
-        result = api_call("POST", path, fields)
+        status, body = call("POST", f"{path}?sysparm_exclude_reference_link=true", fields)
         action = "作成"
-        sys_id = (result.get("body") or {}).get("result", {}).get("sys_id")
+    if not 200 <= status < 300:
+        raise SnError(f"{action}失敗: {table} {lookup} HTTP {status} {error_message(body)}")
 
-    status = result["status"]
-    ok = 200 <= status < 300
-    mark = "OK " if ok else "FAIL"
-    print(f"{mark} {action}: {table} {lookup} (sys_id={sys_id}, HTTP {status})")
-    if not ok:
-        print(f"     {json.dumps(result['body'], ensure_ascii=False)[:400]}")
-        sys.exit(1)
+    result = body["result"]
+    # スコープ切替が効いていないと、エラーにならずに global に作成されてしまうため必ず検証する
+    if result.get("sys_scope") != app_id:
+        raise SnError(f"{table} {result.get('sys_id')} がアプリ外のスコープ({result.get('sys_scope')})に"
+                      "作成されました。手動で削除してから再実行してください。")
+    if record.get("id"):
+        ids[record["id"]] = result["sys_id"]
+    print(f"OK  {action}: {table} {record.get('id') or lookup} (sys_id={result['sys_id']}, HTTP {status})")
 
 
 def main():
@@ -125,32 +117,24 @@ def main():
         print(__doc__)
         sys.exit(1)
     manifest_path = sys.argv[1]
-    app_id = sys.argv[2] if len(sys.argv) > 2 else None
-    if not app_id:
-        try:
-            app_id = load_env().get("SN_APP_SYS_ID")
-        except Exception:
-            app_id = None
+    app_id = sys.argv[2] if len(sys.argv) > 2 else env().get("SN_APP_SYS_ID")
     if not app_id:
         sys.exit("ERROR: .env の SN_APP_SYS_ID を設定するか、第2引数でアプリのsys_idを指定してください。")
 
     with open(manifest_path, encoding="utf-8") as f:
         manifest = json.load(f)
-
-    # Table API はリクエスト内の sys_scope / sys_package やスコープヘッダーを無視し、
-    # セッションの「現在のアプリ」でレコードのスコープを決める。
-    # そのため UI のアプリピッカーと同じAPIで現在のアプリを切り替えてから書き込む。
-    switched = api_call("PUT", "/api/now/ui/concoursepicker/application", {"app_id": app_id})
-    if switched["status"] != 200:
-        sys.exit(f"ERROR: アプリスコープの切替に失敗: HTTP {switched['status']}")
-    print(f"セッションのアプリスコープを切替: {app_id}")
-
     records = manifest.get("records", [])
-    print(f"適用対象: {len(records)}件 (manifest={manifest_path})")
-    for record in records:
-        apply_record(record, app_id, os.path.dirname(os.path.abspath(manifest_path)))
-    print("完了。スナップショットを再取得して差分確認してください:")
-    print("  python3 scripts/snapshot_via_browser.py")
+
+    try:
+        # Table API はペイロードの sys_scope を無視し、セッションの「現在のアプリ」でスコープを決める
+        set_current_app(app_id)
+        print(f"適用対象: {len(records)}件 (manifest={manifest_path})")
+        ids = {}
+        for record in records:
+            apply_record(record, app_id, os.path.dirname(os.path.abspath(manifest_path)), ids)
+    except SnError as e:
+        sys.exit(f"ERROR: {e}")
+    print("完了。スナップショットを再取得して差分を確認してください: python3 scripts/inspect_app.py")
 
 
 if __name__ == "__main__":

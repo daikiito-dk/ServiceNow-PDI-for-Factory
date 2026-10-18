@@ -32,7 +32,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
-from inspect_app import DEFAULT_REPORT, DEFAULT_SNAPSHOT, render_report  # noqa: E402
+from inspect_app import DEFAULT_REPORT, DEFAULT_SNAPSHOT, render_report, write_snapshot  # noqa: E402
 from snow_api import load_env  # noqa: E402
 
 FETCH_JS = r"""
@@ -184,8 +184,7 @@ def main():
     for table, err in errors.items():
         print(f"  WARN {table}: {err}")
 
-    with open(DEFAULT_SNAPSHOT, "w", encoding="utf-8") as f:
-        json.dump(snapshot, f, ensure_ascii=False, indent=2)
+    write_snapshot(snapshot, DEFAULT_SNAPSHOT)
     render_report(snapshot, DEFAULT_REPORT)
     print(f"スナップショット保存: {DEFAULT_SNAPSHOT}")
 

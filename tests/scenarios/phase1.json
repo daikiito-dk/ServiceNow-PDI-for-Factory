@@ -1,0 +1,59 @@
+{
+  "description": "フェーズ1(入力検証・ステータス遷移の強制)の回帰テスト。roadmap 1-1, 1-2",
+  "table": "x_2221323_loan_p_0_request",
+  "cases": [
+    {
+      "name": "入力検証: 不正な値は拒否される",
+      "as": "applicant",
+      "steps": [
+        {"op": "insert", "label": "金額がマイナス", "data": {"customer_name": "TEST-自動検証", "requested_amount": "-5"}, "expect": "reject"},
+        {"op": "insert", "label": "金額が0", "data": {"customer_name": "TEST-自動検証", "requested_amount": "0"}, "expect": "reject"},
+        {"op": "insert", "label": "金額が上限(1億円)超え", "data": {"customer_name": "TEST-自動検証", "requested_amount": "100000001"}, "expect": "reject"},
+        {"op": "insert", "label": "年収がマイナス", "data": {"customer_name": "TEST-自動検証", "requested_amount": "5000000", "annual_income": "-1"}, "expect": "reject"},
+        {"op": "insert", "label": "年収が0", "data": {"customer_name": "TEST-自動検証", "requested_amount": "5000000", "annual_income": "0"}, "expect": "reject"},
+        {"op": "insert", "label": "顧客名が空白のみ", "data": {"customer_name": "   ", "requested_amount": "5000000"}, "expect": "reject"},
+        {"op": "insert", "label": "承認済みの申請を直接作成", "data": {"customer_name": "TEST-自動検証", "requested_amount": "5000000", "status": "approved"}, "expect": "reject"}
+      ]
+    },
+    {
+      "name": "入力検証: 正しい値は登録できる",
+      "as": "applicant",
+      "steps": [
+        {"op": "insert", "label": "上限ちょうど(1億円)", "data": {"customer_name": "TEST-自動検証", "requested_amount": "100000000"}, "expect": "ok"},
+        {"op": "insert", "label": "年収が空欄", "data": {"customer_name": "TEST-自動検証", "requested_amount": "3000000"}, "expect": "ok"},
+        {"op": "insert", "label": "全項目あり(入力値が保存される)", "data": {"customer_name": "TEST-自動検証", "requested_amount": "5000000", "annual_income": "6000000", "credit_rating": "b", "purpose": "car"}, "expect": "ok", "then": {"status": "received", "customer_name": "TEST-自動検証", "credit_rating": "b", "purpose": "car"}}
+      ]
+    },
+    {
+      "name": "ステータス遷移: 審査担当者は正しい順序でのみ変更できる",
+      "as": "underwriter",
+      "steps": [
+        {"op": "insert", "as": "applicant", "label": "営業担当が申請", "data": {"customer_name": "TEST-自動検証", "requested_amount": "15000000"}, "expect": "ok", "save": "req"},
+        {"op": "update", "record": "req", "label": "受付→承認(審査中を飛ばす)", "data": {"status": "approved"}, "expect": "reject", "then": {"status": "received"}},
+        {"op": "update", "record": "req", "label": "受付→審査中", "data": {"status": "reviewing"}, "expect": "ok", "then": {"status": "reviewing"}},
+        {"op": "update", "record": "req", "label": "審査中→条件付き承認", "data": {"status": "conditional"}, "expect": "ok", "then": {"status": "conditional"}},
+        {"op": "update", "record": "req", "label": "条件付き承認→承認", "data": {"status": "approved"}, "expect": "ok", "then": {"status": "approved"}},
+        {"op": "update", "record": "req", "label": "承認→審査中(差し戻し)", "data": {"status": "reviewing"}, "expect": "reject", "then": {"status": "approved"}}
+      ]
+    },
+    {
+      "name": "ステータス遷移: 否決は終点",
+      "as": "underwriter",
+      "steps": [
+        {"op": "insert", "as": "applicant", "label": "営業担当が申請", "data": {"customer_name": "TEST-自動検証", "requested_amount": "2000000"}, "expect": "ok", "save": "req"},
+        {"op": "update", "record": "req", "label": "受付→否決", "data": {"status": "rejected"}, "expect": "ok", "then": {"status": "rejected"}},
+        {"op": "update", "record": "req", "label": "否決→審査中", "data": {"status": "reviewing"}, "expect": "reject", "then": {"status": "rejected"}}
+      ]
+    },
+    {
+      "name": "権限: 営業担当者は申請後に変更できない",
+      "as": "applicant",
+      "steps": [
+        {"op": "insert", "label": "営業担当が申請", "data": {"customer_name": "TEST-自動検証", "requested_amount": "4000000"}, "expect": "ok", "save": "req"},
+        {"op": "update", "record": "req", "label": "営業担当がステータスを審査中に変更", "data": {"status": "reviewing"}, "expect": "reject", "then": {"status": "received"}},
+        {"op": "update", "record": "req", "label": "営業担当が金額を変更", "data": {"requested_amount": "9000000"}, "expect": "reject"},
+        {"op": "delete", "record": "req", "label": "営業担当が削除", "expect": "reject"}
+      ]
+    }
+  ]
+}

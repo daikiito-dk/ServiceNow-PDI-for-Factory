@@ -21,7 +21,15 @@ import os
 import sys
 from datetime import datetime, timezone
 
-from snow_api import ApiError, load_env, request
+from snow_api import ApiError, load_env
+from snow_api import request as _api_request
+
+
+def request(method, path, query):
+    # snow_api.request の第3引数は payload。位置引数でクエリを渡すと本文扱いになり、
+    # フィルタが無視されて全件が返るため、必ずキーワードで渡す
+    return _api_request(method, path, query=query)
+
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_SNAPSHOT = os.path.join(ROOT, "docs", "app-snapshot.json")
@@ -41,7 +49,7 @@ TABLES = [
      "sys_package", "ラベル"),
     ("sys_choice",
      "sys_id,name,element,label,value,sequence,dependent_value,inactive",
-     "sys_package", "選択肢"),
+     "scope_prefix", "選択肢"),
     ("sys_script",
      "sys_id,name,collection,when,condition,order,active,script,action",
      "sys_package", "ビジネスルール"),
@@ -86,13 +94,15 @@ TABLES = [
 
 # ---------------------------------------------------------------- 取得系
 
-def fetch_table_records(table, fields, key, app_id):
+def fetch_table_records(table, fields, key, app_id, scope):
     """1テーブル分のレコードをページングしながら全件取得する。"""
+    # sys_choice は sys_package フィルタが効かず全インスタンス分が返るため、テーブル名の接頭辞で絞る
+    condition = f"nameSTARTSWITH{scope}" if key == "scope_prefix" else f"{key}={app_id}"
     records = []
     offset = 0
     while True:
         query = (
-            f"sysparm_query={key}={app_id}"
+            f"sysparm_query={condition}&sysparm_exclude_reference_link=true"
             f"&sysparm_limit={PAGE_LIMIT}&sysparm_order_by=sys_id&sysparm_offset={offset}"
         )
         if fields:
@@ -174,7 +184,7 @@ def take_snapshot(app_id, instance):
     tables, errors, summary = {}, {}, {}
     for table, fields, key, label in TABLES:
         try:
-            rows = fetch_table_records(table, fields, key, app_id)
+            rows = fetch_table_records(table, fields, key, app_id, app.get("scope"))
         except ApiError as e:
             errors[table] = str(e)
             summary[label] = None
@@ -378,6 +388,19 @@ def _group(rows):
     return grouped
 
 
+def write_snapshot(snapshot, path):
+    """取得方式や API の返却順によらず同じ内容なら同じファイルになるよう、順序を固定して保存する。
+
+    構成のずれ検知は git diff で行うため、順序の揺れが差分に出ると誤検知になる。
+    """
+    for table, rows in snapshot.get("tables", {}).items():
+        snapshot["tables"][table] = sorted(rows, key=lambda r: str(r.get("sys_id", "")))
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(snapshot, f, ensure_ascii=False, indent=2, sort_keys=True)
+        f.write("\n")
+
+
 # ---------------------------------------------------------------- main
 
 def main():
@@ -414,9 +437,7 @@ def main():
     except ApiError as e:
         sys.exit(f"ERROR: {e}")
 
-    os.makedirs(os.path.dirname(args.snapshot), exist_ok=True)
-    with open(args.snapshot, "w", encoding="utf-8") as f:
-        json.dump(snapshot, f, ensure_ascii=False, indent=2)
+    write_snapshot(snapshot, args.snapshot)
     print(f"スナップショット保存: {args.snapshot}")
     render_report(snapshot, args.out)
 

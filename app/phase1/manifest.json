@@ -45,6 +45,29 @@
       },
       "script_file": "br_enforce_status.js",
       "script_fields": ["script"]
+    },
+    {
+      "id": "acl_create_fields",
+      "table": "sys_security_acl",
+      "lookup": { "name": "x_2221323_loan_p_0_request.*", "operation": "create", "sys_scope": "__APP__" },
+      "fields": {
+        "name": "x_2221323_loan_p_0_request.*",
+        "operation": "create",
+        "type": "record",
+        "active": true,
+        "admin_overrides": true,
+        "description": "申請作成時に全フィールドへ値を設定できるようにする。フィールド単位の create ACL がないと write ACL(審査担当者のみ)で判定され、営業担当者が作成時に入力した値が捨てられてしまうため。"
+      }
+    },
+    {
+      "table": "sys_security_acl_role",
+      "lookup": { "sys_security_acl": "{{id:acl_create_fields}}", "sys_user_role": "{{role:x_2221323_loan_p_0.loan_applicant}}" },
+      "fields": { "sys_security_acl": "{{id:acl_create_fields}}", "sys_user_role": "{{role:x_2221323_loan_p_0.loan_applicant}}" }
+    },
+    {
+      "table": "sys_security_acl_role",
+      "lookup": { "sys_security_acl": "{{id:acl_create_fields}}", "sys_user_role": "{{role:x_2221323_loan_p_0.loan_underwriter}}" },
+      "fields": { "sys_security_acl": "{{id:acl_create_fields}}", "sys_user_role": "{{role:x_2221323_loan_p_0.loan_underwriter}}" }
     }
   ]
 }

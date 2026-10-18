@@ -1,666 +1,16 @@
 {
-  "instance": "dev274447.service-now.com",
-  "fetched_at": "2026-10-15T14:35:39.581Z",
   "app": {
-    "sys_id": "ea814ae7833f8310d9ffe270ceaad302",
+    "active": "true",
+    "name": "Loan Pre-Screening Management",
+    "scope": "x_2221323_loan_p_0",
     "short_description": "銀行・金融機関向けの融資事前審査リクエスト管理アプリケーション。営業担当者が融資事前審査申請を登録し、審査部門がリスク評価・承認判定を行う。1,000万円以上は二段階承認へルーティング。",
     "sys_created_on": "2026-10-14 05:32:27",
-    "scope": "x_2221323_loan_p_0",
-    "name": "Loan Pre-Screening Management",
-    "active": "true",
+    "sys_id": "ea814ae7833f8310d9ffe270ceaad302",
     "sys_updated_on": "2026-10-14 05:32:27",
     "version": "1.0.0"
   },
-  "summary": {
-    "テーブル": 1,
-    "フィールド": 9,
-    "ラベル": 15,
-    "ビジネスルール": 2,
-    "クライアントスクリプト": 0,
-    "スクリプトインクルード": 0,
-    "UIアクション": 0,
-    "ACL": 4,
-    "ACLロール": 6,
-    "ロール": 2,
-    "モジュール": 0,
-    "UIページ": 0,
-    "UIマクロ": 0,
-    "メール通知": 0,
-    "システムプロパティ": 1,
-    "フロー": 2,
-    "選択肢": 13
-  },
-  "tables": {
-    "sys_db_object": [
-      {
-        "sys_id": "a3670a9edba2441bbc684ed037273806",
-        "is_extendable": "false",
-        "access": "public",
-        "name": "x_2221323_loan_p_0_request",
-        "super_class": "",
-        "label": "融資事前審査リクエスト"
-      }
-    ],
-    "sys_dictionary": [
-      {
-        "reference": "sys_user",
-        "sys_id": "3620cb2a9ebe4a9db254ca9cac85ae76",
-        "column_label": "審査部長 (承認者)",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "default_value": "",
-        "dependent_on_field": "",
-        "internal_type": "reference",
-        "mandatory": "false",
-        "element": "approver",
-        "max_length": "32"
-      },
-      {
-        "reference": "",
-        "sys_id": "373391b45ec1451ab9a264b1e20fc26c",
-        "column_label": "顧客名",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "default_value": "",
-        "dependent_on_field": "",
-        "internal_type": "string",
-        "mandatory": "true",
-        "element": "customer_name",
-        "max_length": "100"
-      },
-      {
-        "reference": "",
-        "sys_id": "5690b492c1c64621a73482908f168575",
-        "column_label": "融資希望金額 (JPY)",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "default_value": "",
-        "dependent_on_field": "",
-        "internal_type": "decimal",
-        "mandatory": "true",
-        "element": "requested_amount",
-        "max_length": "15"
-      },
-      {
-        "reference": "",
-        "sys_id": "5ed231e5d1ee40e89bdd0b680b34fd41",
-        "column_label": "",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "default_value": "",
-        "dependent_on_field": "",
-        "internal_type": "collection",
-        "mandatory": "false",
-        "element": "",
-        "max_length": ""
-      },
-      {
-        "reference": "",
-        "sys_id": "6086c3bc27ce4d678c62d5c28350f7a6",
-        "column_label": "信用格付",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "default_value": "",
-        "dependent_on_field": "",
-        "internal_type": "choice",
-        "mandatory": "false",
-        "element": "credit_rating",
-        "max_length": "40"
-      },
-      {
-        "reference": "",
-        "sys_id": "860f8c69458945fd989ba47244f32bf1",
-        "column_label": "申請番号",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "default_value": "javascript:getNextObjNumberPadded();",
-        "dependent_on_field": "",
-        "internal_type": "string",
-        "mandatory": "false",
-        "element": "number",
-        "max_length": "40"
-      },
-      {
-        "reference": "",
-        "sys_id": "9d2540d921de46a3ae5d83d64122a6d8",
-        "column_label": "資金使途",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "default_value": "",
-        "dependent_on_field": "",
-        "internal_type": "choice",
-        "mandatory": "false",
-        "element": "purpose",
-        "max_length": "40"
-      },
-      {
-        "reference": "",
-        "sys_id": "a8034346235343f7aa428a2613262e14",
-        "column_label": "年収 (JPY)",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "default_value": "",
-        "dependent_on_field": "",
-        "internal_type": "decimal",
-        "mandatory": "false",
-        "element": "annual_income",
-        "max_length": "15"
-      },
-      {
-        "reference": "",
-        "sys_id": "c66e76d1c03442cf9bc43c1bf228aa6b",
-        "column_label": "ステータス",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "default_value": "received",
-        "dependent_on_field": "",
-        "internal_type": "choice",
-        "mandatory": "false",
-        "element": "status",
-        "max_length": "40"
-      }
-    ],
-    "sys_documentation": [
-      {
-        "sys_id": "009ffd3137d84b1d97e784716b9439dd",
-        "plural": "資金使途s",
-        "name": "x_2221323_loan_p_0_request",
-        "language": "en",
-        "label": "資金使途",
-        "element": "purpose"
-      },
-      {
-        "sys_id": "14c242ab833f8310d9ffe270ceaad39f",
-        "plural": "",
-        "name": "var__m_sys_hub_flow_input_c8c242ab833f8310d9ffe270ceaad36b",
-        "language": "en",
-        "label": "Table Name",
-        "element": "table_name"
-      },
-      {
-        "sys_id": "23b202ab833f8310d9ffe270ceaad3ae",
-        "plural": "",
-        "name": "var__m_sys_hub_flow_input_aec1b896324846d8984ca56083754348",
-        "language": "en",
-        "label": "Record",
-        "element": "current"
-      },
-      {
-        "sys_id": "27b202ab833f8310d9ffe270ceaad396",
-        "plural": "",
-        "name": "var__m_sys_hub_flow_input_aec1b896324846d8984ca56083754348",
-        "language": "en",
-        "label": "Table Name",
-        "element": "table_name"
-      },
-      {
-        "sys_id": "2bb202ab833f8310d9ffe270ceaad3c6",
-        "plural": "",
-        "name": "var__m_sys_hub_flow_input_aec1b896324846d8984ca56083754348",
-        "language": "en",
-        "label": "Changed Fields",
-        "element": "changed_fields"
-      },
-      {
-        "sys_id": "40c242ab833f8310d9ffe270ceaad388",
-        "plural": "",
-        "name": "var__m_sys_hub_flow_input_c8c242ab833f8310d9ffe270ceaad36b",
-        "language": "en",
-        "label": "Record",
-        "element": "current"
-      },
-      {
-        "sys_id": "4302420d5bf542ac9da965985d21624f",
-        "plural": "年収 (JPY)",
-        "name": "x_2221323_loan_p_0_request",
-        "language": "en",
-        "label": "年収 (JPY)",
-        "element": "annual_income"
-      },
-      {
-        "sys_id": "4d4cc68760f64bb2b34a6a1a00cea6d7",
-        "plural": "申請番号s",
-        "name": "x_2221323_loan_p_0_request",
-        "language": "en",
-        "label": "申請番号",
-        "element": "number"
-      },
-      {
-        "sys_id": "6937dde82789448894c8bf5609a2bd50",
-        "plural": "信用格付s",
-        "name": "x_2221323_loan_p_0_request",
-        "language": "en",
-        "label": "信用格付",
-        "element": "credit_rating"
-      },
-      {
-        "sys_id": "ccc242ab833f8310d9ffe270ceaad393",
-        "plural": "",
-        "name": "var__m_sys_hub_flow_input_c8c242ab833f8310d9ffe270ceaad36b",
-        "language": "en",
-        "label": "Changed Fields",
-        "element": "changed_fields"
-      },
-      {
-        "sys_id": "ce230fc6f14a4134a5e16cd2391c2c0a",
-        "plural": "融資希望金額 (JPY)",
-        "name": "x_2221323_loan_p_0_request",
-        "language": "en",
-        "label": "融資希望金額 (JPY)",
-        "element": "requested_amount"
-      },
-      {
-        "sys_id": "d091fdb524fc400fbb4f3a50501a89a0",
-        "plural": "顧客名s",
-        "name": "x_2221323_loan_p_0_request",
-        "language": "en",
-        "label": "顧客名",
-        "element": "customer_name"
-      },
-      {
-        "sys_id": "e1cef0c94f3a45b4bd6248f28078e4be",
-        "plural": "ステータスs",
-        "name": "x_2221323_loan_p_0_request",
-        "language": "en",
-        "label": "ステータス",
-        "element": "status"
-      },
-      {
-        "sys_id": "eed9a644715241d0ac2cc65442b5b442",
-        "plural": "融資事前審査リクエストs",
-        "name": "x_2221323_loan_p_0_request",
-        "language": "en",
-        "label": "融資事前審査リクエスト",
-        "element": ""
-      },
-      {
-        "sys_id": "f3600e30e2bb400695f92a7c76145b11",
-        "plural": "審査部長 (承認者)",
-        "name": "x_2221323_loan_p_0_request",
-        "language": "en",
-        "label": "審査部長 (承認者)",
-        "element": "approver"
-      }
-    ],
-    "sys_script": [
-      {
-        "sys_id": "0427010883401310d9ffe270ceaad322",
-        "condition": "",
-        "name": "融資事前審査 ステータス遷移の強制",
-        "active": "true",
-        "collection": "x_2221323_loan_p_0_request",
-        "when": "before",
-        "script": "/**\n * ステータス遷移の強制(roadmap 1-2)\n * テーブル: x_2221323_loan_p_0_request / タイミング: before update\n *\n * ルール:\n *  - ステータス変更は審査担当者(loan_underwriter)のみ可能\n *  - 許可される遷移:\n *      received    -> reviewing | rejected\n *      reviewing   -> conditional | approved | rejected\n *      conditional -> approved | rejected\n *    (approved / rejected は終点)\n */\n(function executeRule(current, previous /*null when async*/) {\n\n  // GlideElement のままだと == / indexOf が値ではなくオブジェクト比較になるため文字列化する\n  var from = String(previous ? previous.status : current.status);\n  var to = String(current.status);\n  if (from == to) {\n    return; // ステータス変更なし\n  }\n\n  if (!gs.hasRole('x_2221323_loan_p_0.loan_underwriter')) {\n    gs.addErrorMessage('ステータスの変更は審査担当者のみ行えます。');\n    current.setAbortAction(true);\n    return;\n  }\n\n  var allowed = {\n    received: ['reviewing', 'rejected'],\n    reviewing: ['conditional', 'approved', 'rejected'],\n    conditional: ['approved', 'rejected']\n  };\n\n  if (!allowed[from] || allowed[from].indexOf(to) < 0) {\n    gs.addErrorMessage('ステータスを「' + from + '」から「' + to + '」へ変更することはできません。');\n    current.setAbortAction(true);\n  }\n\n})(current, previous);\n",
-        "order": "200"
-      },
-      {
-        "sys_id": "0427cdc483401310d9ffe270ceaad3f7",
-        "condition": "",
-        "name": "融資事前審査 入力検証",
-        "active": "true",
-        "collection": "x_2221323_loan_p_0_request",
-        "when": "before",
-        "script": "/**\n * 融資事前審査 入力検証(roadmap 1-1)\n * テーブル: x_2221323_loan_p_0_request / タイミング: before insert & update\n *\n * 検証内容:\n *  - 融資希望金額は 0 < 金額 <= 上限プロパティ(x_2221323_loan_p_0.max_request_amount)\n *  - 年収は未入力可、入力する場合は 0 より大きい\n *  - 顧客名は空白以外必須\n */\n(function executeRule(current, previous /*null when async*/) {\n\n  var MAX = parseInt(gs.getProperty('x_2221323_loan_p_0.max_request_amount', '100000000'), 10);\n\n  // GlideElement は空でもオブジェクトとして truthy になるため、必ず文字列化して判定する\n  var amount = parseFloat(String(current.requested_amount) || 0);\n  if (!(amount > 0)) {\n    gs.addErrorMessage('融資希望金額は0より大きい金額を入力してください。');\n    current.setAbortAction(true);\n  } else if (amount > MAX) {\n    gs.addErrorMessage('融資希望金額が上限(' + MAX + '円)を超えています。');\n    current.setAbortAction(true);\n  }\n\n  if (!current.annual_income.nil() && !(parseFloat(String(current.annual_income)) > 0)) {\n    gs.addErrorMessage('年収は0より大きい金額を入力してください。');\n    current.setAbortAction(true);\n  }\n\n  if (!String(current.customer_name || '').trim()) {\n    gs.addErrorMessage('顧客名は必須です。');\n    current.setAbortAction(true);\n  }\n\n})(current, previous);\n",
-        "order": "100"
-      }
-    ],
-    "sys_script_client": [],
-    "sys_script_include": [],
-    "sys_ui_action": [],
-    "sys_security_acl": [
-      {
-        "sys_id": "0ccc7d1a5f4e44a69d5897faf6d2fdfa",
-        "condition": "",
-        "advanced": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "admin_overrides": "true",
-        "description": "",
-        "type": "record",
-        "operation": "read",
-        "script": ""
-      },
-      {
-        "sys_id": "11296ad78e5f4caa9d12b7700eb8b0ca",
-        "condition": "",
-        "advanced": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "admin_overrides": "true",
-        "description": "",
-        "type": "record",
-        "operation": "write",
-        "script": ""
-      },
-      {
-        "sys_id": "112da6137acf4111bce3d42910ada0bf",
-        "condition": "",
-        "advanced": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "admin_overrides": "true",
-        "description": "",
-        "type": "record",
-        "operation": "delete",
-        "script": ""
-      },
-      {
-        "sys_id": "ac698d7004db407a8a9e8f1a8de7c52e",
-        "condition": "",
-        "advanced": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "active": "true",
-        "admin_overrides": "true",
-        "description": "",
-        "type": "record",
-        "operation": "create",
-        "script": ""
-      }
-    ],
-    "sys_security_acl_role": [
-      {
-        "transaction_id": "",
-        "sys_mod_count": "0",
-        "sys_updated_on": "2026-10-14 05:37:38",
-        "sys_tags": "",
-        "sys_class_name": "sys_security_acl_role",
-        "sys_id": "1a6ec1d65e884aed963dd26642f20c61",
-        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_security_acl": "112da6137acf4111bce3d42910ada0bf",
-        "sys_update_name": "sys_security_acl_role_1a6ec1d65e884aed963dd26642f20c61",
-        "sys_updated_by": "admin",
-        "sys_user_role": "52eae26be5b649fb96f18d9d53430737",
-        "sys_created_on": "2026-10-14 05:37:38",
-        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_underwriter",
-        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_created_by": "admin",
-        "sys_policy": ""
-      },
-      {
-        "transaction_id": "",
-        "sys_mod_count": "0",
-        "sys_updated_on": "2026-10-14 05:37:38",
-        "sys_tags": "",
-        "sys_class_name": "sys_security_acl_role",
-        "sys_id": "2428a78ca690459db265f7610d8395c4",
-        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_security_acl": "0ccc7d1a5f4e44a69d5897faf6d2fdfa",
-        "sys_update_name": "sys_security_acl_role_2428a78ca690459db265f7610d8395c4",
-        "sys_updated_by": "admin",
-        "sys_user_role": "821db60a803f4bbe8b375af020c40583",
-        "sys_created_on": "2026-10-14 05:37:38",
-        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_applicant",
-        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_created_by": "admin",
-        "sys_policy": ""
-      },
-      {
-        "transaction_id": "",
-        "sys_mod_count": "0",
-        "sys_updated_on": "2026-10-14 05:37:38",
-        "sys_tags": "",
-        "sys_class_name": "sys_security_acl_role",
-        "sys_id": "2953b481ab0e4ca0971eec8f4a352de2",
-        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_security_acl": "ac698d7004db407a8a9e8f1a8de7c52e",
-        "sys_update_name": "sys_security_acl_role_2953b481ab0e4ca0971eec8f4a352de2",
-        "sys_updated_by": "admin",
-        "sys_user_role": "52eae26be5b649fb96f18d9d53430737",
-        "sys_created_on": "2026-10-14 05:37:38",
-        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_underwriter",
-        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_created_by": "admin",
-        "sys_policy": ""
-      },
-      {
-        "transaction_id": "",
-        "sys_mod_count": "0",
-        "sys_updated_on": "2026-10-14 05:37:38",
-        "sys_tags": "",
-        "sys_class_name": "sys_security_acl_role",
-        "sys_id": "54bec680775b441eb85202b282f10e01",
-        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_security_acl": "ac698d7004db407a8a9e8f1a8de7c52e",
-        "sys_update_name": "sys_security_acl_role_54bec680775b441eb85202b282f10e01",
-        "sys_updated_by": "admin",
-        "sys_user_role": "821db60a803f4bbe8b375af020c40583",
-        "sys_created_on": "2026-10-14 05:37:38",
-        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_applicant",
-        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_created_by": "admin",
-        "sys_policy": ""
-      },
-      {
-        "transaction_id": "",
-        "sys_mod_count": "0",
-        "sys_updated_on": "2026-10-14 05:37:38",
-        "sys_tags": "",
-        "sys_class_name": "sys_security_acl_role",
-        "sys_id": "80dda8774c1a4893a3cb3e1425c52a4f",
-        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_security_acl": "0ccc7d1a5f4e44a69d5897faf6d2fdfa",
-        "sys_update_name": "sys_security_acl_role_80dda8774c1a4893a3cb3e1425c52a4f",
-        "sys_updated_by": "admin",
-        "sys_user_role": "52eae26be5b649fb96f18d9d53430737",
-        "sys_created_on": "2026-10-14 05:37:38",
-        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_underwriter",
-        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_created_by": "admin",
-        "sys_policy": ""
-      },
-      {
-        "transaction_id": "",
-        "sys_mod_count": "0",
-        "sys_updated_on": "2026-10-14 05:37:38",
-        "sys_tags": "",
-        "sys_class_name": "sys_security_acl_role",
-        "sys_id": "ab4bf2c7feab44309da127a4e929225b",
-        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_security_acl": "11296ad78e5f4caa9d12b7700eb8b0ca",
-        "sys_update_name": "sys_security_acl_role_ab4bf2c7feab44309da127a4e929225b",
-        "sys_updated_by": "admin",
-        "sys_user_role": "52eae26be5b649fb96f18d9d53430737",
-        "sys_created_on": "2026-10-14 05:37:38",
-        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_underwriter",
-        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_created_by": "admin",
-        "sys_policy": ""
-      }
-    ],
-    "sys_user_role": [
-      {
-        "sys_id": "52eae26be5b649fb96f18d9d53430737",
-        "name": "x_2221323_loan_p_0.loan_underwriter",
-        "description": "Loan Underwriter (審査担当者) — can review, edit, and decide on loan pre-screening requests.",
-        "suffix": "loan_underwriter"
-      },
-      {
-        "sys_id": "821db60a803f4bbe8b375af020c40583",
-        "name": "x_2221323_loan_p_0.loan_applicant",
-        "description": "Loan Applicant (営業担当者) — can create and view loan pre-screening requests.",
-        "suffix": "loan_applicant"
-      }
-    ],
-    "sys_app_module": [],
-    "sys_ui_page": [],
-    "sys_ui_macro": [],
-    "sysevent_email_action": [],
-    "sys_properties": [
-      {
-        "is_private": "false",
-        "ignore_cache": "false",
-        "sys_mod_count": "0",
-        "description": "融資事前審査の融資希望金額上限(JPY)。入力検証ビジネスルールが参照する。",
-        "sys_updated_on": "2026-10-15 14:34:04",
-        "suffix": "max_request_amount",
-        "sys_tags": "",
-        "type": "integer",
-        "sys_class_name": "sys_properties",
-        "sys_id": "0e1709c483401310d9ffe270ceaad304",
-        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
-        "sys_update_name": "sys_properties_0e1709c483401310d9ffe270ceaad304",
-        "sys_updated_by": "admin",
-        "write_roles": "",
-        "sys_created_on": "2026-10-15 14:34:04",
-        "name": "x_2221323_loan_p_0.max_request_amount",
-        "read_roles": "",
-        "sys_name": "x_2221323_loan_p_0.max_request_amount",
-        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
-        "choices": "",
-        "value": "100000000",
-        "sys_created_by": "admin",
-        "sys_policy": ""
-      }
-    ],
-    "sys_hub_flow": [
-      {
-        "sys_id": "aec1b896324846d8984ca56083754348",
-        "name": "高額融資 二段階承認 (High-Value Loan Two-Stage Approval)",
-        "active": "true",
-        "description": "",
-        "type": "flow"
-      },
-      {
-        "sys_id": "e220ae238333c310d9ffe270ceaad312",
-        "name": "Test",
-        "active": "false",
-        "description": "",
-        "type": "flow"
-      }
-    ],
-    "sys_choice": [
-      {
-        "dependent_value": "",
-        "sys_id": "13d0c6c2287f470f9ec80018095344f9",
-        "sequence": "3",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "マイカー",
-        "value": "car",
-        "element": "purpose"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "2e960ab3880e426d82ff3f5157948485",
-        "sequence": "1",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "A",
-        "value": "a",
-        "element": "credit_rating"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "4faa72086eb3418bb0de9d5dec5ebe42",
-        "sequence": "4",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "D",
-        "value": "d",
-        "element": "credit_rating"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "5261f2af5711444e8a1a27afbcf98d8d",
-        "sequence": "3",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "C",
-        "value": "c",
-        "element": "credit_rating"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "68de4015e0a441c2af9f894450729921",
-        "sequence": "4",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "承認",
-        "value": "approved",
-        "element": "status"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "75d3d39e84eb4778a40961398946e7a2",
-        "sequence": "2",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "B",
-        "value": "b",
-        "element": "credit_rating"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "80f46b87169446bcbbf6ec127838f6ce",
-        "sequence": "4",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "その他",
-        "value": "other",
-        "element": "purpose"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "959b947f44b9442d8a8873d4721fdfdb",
-        "sequence": "2",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "事業資金",
-        "value": "business",
-        "element": "purpose"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "9a9042df85de403fbcead1716bbcca23",
-        "sequence": "2",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "審査中",
-        "value": "reviewing",
-        "element": "status"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "a70f6e92a0e241778349988a731d12c9",
-        "sequence": "1",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "申請受付",
-        "value": "received",
-        "element": "status"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "d537dbf8bed4450fac25a14e4a8afe8f",
-        "sequence": "1",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "住宅購入",
-        "value": "home_purchase",
-        "element": "purpose"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "dcc40aac2eb64048b7c336b51c737a24",
-        "sequence": "3",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "条件付き承認",
-        "value": "conditional",
-        "element": "status"
-      },
-      {
-        "dependent_value": "",
-        "sys_id": "f54aa751f63d4645bc0737b176fdbd24",
-        "sequence": "5",
-        "inactive": "false",
-        "name": "x_2221323_loan_p_0_request",
-        "label": "否決",
-        "value": "rejected",
-        "element": "status"
-      }
-    ]
-  },
+  "errors": {},
+  "fetched_at": "2026-10-15T14:54:42.367687+00:00",
   "glossary": {
     "glide_objects": {
       "0327382ac611228101bb3e9aaa3b3f11": "password2",
@@ -829,5 +179,655 @@
     },
     "parent_tables": {}
   },
-  "errors": {}
+  "instance": "dev274447.service-now.com",
+  "summary": {
+    "ACL": 4,
+    "ACLロール": 6,
+    "UIアクション": 0,
+    "UIページ": 0,
+    "UIマクロ": 0,
+    "クライアントスクリプト": 0,
+    "システムプロパティ": 1,
+    "スクリプトインクルード": 0,
+    "テーブル": 1,
+    "ビジネスルール": 2,
+    "フィールド": 9,
+    "フロー": 2,
+    "メール通知": 0,
+    "モジュール": 0,
+    "ラベル": 15,
+    "ロール": 2,
+    "選択肢": 13
+  },
+  "tables": {
+    "sys_app_module": [],
+    "sys_choice": [
+      {
+        "dependent_value": "",
+        "element": "purpose",
+        "inactive": "false",
+        "label": "マイカー",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "3",
+        "sys_id": "13d0c6c2287f470f9ec80018095344f9",
+        "value": "car"
+      },
+      {
+        "dependent_value": "",
+        "element": "credit_rating",
+        "inactive": "false",
+        "label": "A",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "1",
+        "sys_id": "2e960ab3880e426d82ff3f5157948485",
+        "value": "a"
+      },
+      {
+        "dependent_value": "",
+        "element": "credit_rating",
+        "inactive": "false",
+        "label": "D",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "4",
+        "sys_id": "4faa72086eb3418bb0de9d5dec5ebe42",
+        "value": "d"
+      },
+      {
+        "dependent_value": "",
+        "element": "credit_rating",
+        "inactive": "false",
+        "label": "C",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "3",
+        "sys_id": "5261f2af5711444e8a1a27afbcf98d8d",
+        "value": "c"
+      },
+      {
+        "dependent_value": "",
+        "element": "status",
+        "inactive": "false",
+        "label": "承認",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "4",
+        "sys_id": "68de4015e0a441c2af9f894450729921",
+        "value": "approved"
+      },
+      {
+        "dependent_value": "",
+        "element": "credit_rating",
+        "inactive": "false",
+        "label": "B",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "2",
+        "sys_id": "75d3d39e84eb4778a40961398946e7a2",
+        "value": "b"
+      },
+      {
+        "dependent_value": "",
+        "element": "purpose",
+        "inactive": "false",
+        "label": "その他",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "4",
+        "sys_id": "80f46b87169446bcbbf6ec127838f6ce",
+        "value": "other"
+      },
+      {
+        "dependent_value": "",
+        "element": "purpose",
+        "inactive": "false",
+        "label": "事業資金",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "2",
+        "sys_id": "959b947f44b9442d8a8873d4721fdfdb",
+        "value": "business"
+      },
+      {
+        "dependent_value": "",
+        "element": "status",
+        "inactive": "false",
+        "label": "審査中",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "2",
+        "sys_id": "9a9042df85de403fbcead1716bbcca23",
+        "value": "reviewing"
+      },
+      {
+        "dependent_value": "",
+        "element": "status",
+        "inactive": "false",
+        "label": "申請受付",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "1",
+        "sys_id": "a70f6e92a0e241778349988a731d12c9",
+        "value": "received"
+      },
+      {
+        "dependent_value": "",
+        "element": "purpose",
+        "inactive": "false",
+        "label": "住宅購入",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "1",
+        "sys_id": "d537dbf8bed4450fac25a14e4a8afe8f",
+        "value": "home_purchase"
+      },
+      {
+        "dependent_value": "",
+        "element": "status",
+        "inactive": "false",
+        "label": "条件付き承認",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "3",
+        "sys_id": "dcc40aac2eb64048b7c336b51c737a24",
+        "value": "conditional"
+      },
+      {
+        "dependent_value": "",
+        "element": "status",
+        "inactive": "false",
+        "label": "否決",
+        "name": "x_2221323_loan_p_0_request",
+        "sequence": "5",
+        "sys_id": "f54aa751f63d4645bc0737b176fdbd24",
+        "value": "rejected"
+      }
+    ],
+    "sys_db_object": [
+      {
+        "access": "public",
+        "is_extendable": "false",
+        "label": "融資事前審査リクエスト",
+        "name": "x_2221323_loan_p_0_request",
+        "super_class": "",
+        "sys_id": "a3670a9edba2441bbc684ed037273806"
+      }
+    ],
+    "sys_dictionary": [
+      {
+        "active": "true",
+        "column_label": "審査部長 (承認者)",
+        "default_value": "",
+        "dependent_on_field": "",
+        "element": "approver",
+        "internal_type": "reference",
+        "mandatory": "false",
+        "max_length": "32",
+        "name": "x_2221323_loan_p_0_request",
+        "reference": "sys_user",
+        "sys_id": "3620cb2a9ebe4a9db254ca9cac85ae76"
+      },
+      {
+        "active": "true",
+        "column_label": "顧客名",
+        "default_value": "",
+        "dependent_on_field": "",
+        "element": "customer_name",
+        "internal_type": "string",
+        "mandatory": "true",
+        "max_length": "100",
+        "name": "x_2221323_loan_p_0_request",
+        "reference": "",
+        "sys_id": "373391b45ec1451ab9a264b1e20fc26c"
+      },
+      {
+        "active": "true",
+        "column_label": "融資希望金額 (JPY)",
+        "default_value": "",
+        "dependent_on_field": "",
+        "element": "requested_amount",
+        "internal_type": "decimal",
+        "mandatory": "true",
+        "max_length": "15",
+        "name": "x_2221323_loan_p_0_request",
+        "reference": "",
+        "sys_id": "5690b492c1c64621a73482908f168575"
+      },
+      {
+        "active": "true",
+        "column_label": "",
+        "default_value": "",
+        "dependent_on_field": "",
+        "element": "",
+        "internal_type": "collection",
+        "mandatory": "false",
+        "max_length": "",
+        "name": "x_2221323_loan_p_0_request",
+        "reference": "",
+        "sys_id": "5ed231e5d1ee40e89bdd0b680b34fd41"
+      },
+      {
+        "active": "true",
+        "column_label": "信用格付",
+        "default_value": "",
+        "dependent_on_field": "",
+        "element": "credit_rating",
+        "internal_type": "choice",
+        "mandatory": "false",
+        "max_length": "40",
+        "name": "x_2221323_loan_p_0_request",
+        "reference": "",
+        "sys_id": "6086c3bc27ce4d678c62d5c28350f7a6"
+      },
+      {
+        "active": "true",
+        "column_label": "申請番号",
+        "default_value": "javascript:getNextObjNumberPadded();",
+        "dependent_on_field": "",
+        "element": "number",
+        "internal_type": "string",
+        "mandatory": "false",
+        "max_length": "40",
+        "name": "x_2221323_loan_p_0_request",
+        "reference": "",
+        "sys_id": "860f8c69458945fd989ba47244f32bf1"
+      },
+      {
+        "active": "true",
+        "column_label": "資金使途",
+        "default_value": "",
+        "dependent_on_field": "",
+        "element": "purpose",
+        "internal_type": "choice",
+        "mandatory": "false",
+        "max_length": "40",
+        "name": "x_2221323_loan_p_0_request",
+        "reference": "",
+        "sys_id": "9d2540d921de46a3ae5d83d64122a6d8"
+      },
+      {
+        "active": "true",
+        "column_label": "年収 (JPY)",
+        "default_value": "",
+        "dependent_on_field": "",
+        "element": "annual_income",
+        "internal_type": "decimal",
+        "mandatory": "false",
+        "max_length": "15",
+        "name": "x_2221323_loan_p_0_request",
+        "reference": "",
+        "sys_id": "a8034346235343f7aa428a2613262e14"
+      },
+      {
+        "active": "true",
+        "column_label": "ステータス",
+        "default_value": "received",
+        "dependent_on_field": "",
+        "element": "status",
+        "internal_type": "choice",
+        "mandatory": "false",
+        "max_length": "40",
+        "name": "x_2221323_loan_p_0_request",
+        "reference": "",
+        "sys_id": "c66e76d1c03442cf9bc43c1bf228aa6b"
+      }
+    ],
+    "sys_documentation": [
+      {
+        "element": "purpose",
+        "label": "資金使途",
+        "language": "en",
+        "name": "x_2221323_loan_p_0_request",
+        "plural": "資金使途s",
+        "sys_id": "009ffd3137d84b1d97e784716b9439dd"
+      },
+      {
+        "element": "table_name",
+        "label": "Table Name",
+        "language": "en",
+        "name": "var__m_sys_hub_flow_input_c8c242ab833f8310d9ffe270ceaad36b",
+        "plural": "",
+        "sys_id": "14c242ab833f8310d9ffe270ceaad39f"
+      },
+      {
+        "element": "current",
+        "label": "Record",
+        "language": "en",
+        "name": "var__m_sys_hub_flow_input_aec1b896324846d8984ca56083754348",
+        "plural": "",
+        "sys_id": "23b202ab833f8310d9ffe270ceaad3ae"
+      },
+      {
+        "element": "table_name",
+        "label": "Table Name",
+        "language": "en",
+        "name": "var__m_sys_hub_flow_input_aec1b896324846d8984ca56083754348",
+        "plural": "",
+        "sys_id": "27b202ab833f8310d9ffe270ceaad396"
+      },
+      {
+        "element": "changed_fields",
+        "label": "Changed Fields",
+        "language": "en",
+        "name": "var__m_sys_hub_flow_input_aec1b896324846d8984ca56083754348",
+        "plural": "",
+        "sys_id": "2bb202ab833f8310d9ffe270ceaad3c6"
+      },
+      {
+        "element": "current",
+        "label": "Record",
+        "language": "en",
+        "name": "var__m_sys_hub_flow_input_c8c242ab833f8310d9ffe270ceaad36b",
+        "plural": "",
+        "sys_id": "40c242ab833f8310d9ffe270ceaad388"
+      },
+      {
+        "element": "annual_income",
+        "label": "年収 (JPY)",
+        "language": "en",
+        "name": "x_2221323_loan_p_0_request",
+        "plural": "年収 (JPY)",
+        "sys_id": "4302420d5bf542ac9da965985d21624f"
+      },
+      {
+        "element": "number",
+        "label": "申請番号",
+        "language": "en",
+        "name": "x_2221323_loan_p_0_request",
+        "plural": "申請番号s",
+        "sys_id": "4d4cc68760f64bb2b34a6a1a00cea6d7"
+      },
+      {
+        "element": "credit_rating",
+        "label": "信用格付",
+        "language": "en",
+        "name": "x_2221323_loan_p_0_request",
+        "plural": "信用格付s",
+        "sys_id": "6937dde82789448894c8bf5609a2bd50"
+      },
+      {
+        "element": "changed_fields",
+        "label": "Changed Fields",
+        "language": "en",
+        "name": "var__m_sys_hub_flow_input_c8c242ab833f8310d9ffe270ceaad36b",
+        "plural": "",
+        "sys_id": "ccc242ab833f8310d9ffe270ceaad393"
+      },
+      {
+        "element": "requested_amount",
+        "label": "融資希望金額 (JPY)",
+        "language": "en",
+        "name": "x_2221323_loan_p_0_request",
+        "plural": "融資希望金額 (JPY)",
+        "sys_id": "ce230fc6f14a4134a5e16cd2391c2c0a"
+      },
+      {
+        "element": "customer_name",
+        "label": "顧客名",
+        "language": "en",
+        "name": "x_2221323_loan_p_0_request",
+        "plural": "顧客名s",
+        "sys_id": "d091fdb524fc400fbb4f3a50501a89a0"
+      },
+      {
+        "element": "status",
+        "label": "ステータス",
+        "language": "en",
+        "name": "x_2221323_loan_p_0_request",
+        "plural": "ステータスs",
+        "sys_id": "e1cef0c94f3a45b4bd6248f28078e4be"
+      },
+      {
+        "element": "",
+        "label": "融資事前審査リクエスト",
+        "language": "en",
+        "name": "x_2221323_loan_p_0_request",
+        "plural": "融資事前審査リクエストs",
+        "sys_id": "eed9a644715241d0ac2cc65442b5b442"
+      },
+      {
+        "element": "approver",
+        "label": "審査部長 (承認者)",
+        "language": "en",
+        "name": "x_2221323_loan_p_0_request",
+        "plural": "審査部長 (承認者)",
+        "sys_id": "f3600e30e2bb400695f92a7c76145b11"
+      }
+    ],
+    "sys_hub_flow": [
+      {
+        "active": "true",
+        "description": "",
+        "name": "高額融資 二段階承認 (High-Value Loan Two-Stage Approval)",
+        "sys_id": "aec1b896324846d8984ca56083754348",
+        "type": "flow"
+      },
+      {
+        "active": "false",
+        "description": "",
+        "name": "Test",
+        "sys_id": "e220ae238333c310d9ffe270ceaad312",
+        "type": "flow"
+      }
+    ],
+    "sys_properties": [
+      {
+        "choices": "",
+        "description": "融資事前審査の融資希望金額上限(JPY)。入力検証ビジネスルールが参照する。",
+        "ignore_cache": "false",
+        "is_private": "false",
+        "name": "x_2221323_loan_p_0.max_request_amount",
+        "read_roles": "",
+        "suffix": "max_request_amount",
+        "sys_class_name": "sys_properties",
+        "sys_created_by": "admin",
+        "sys_created_on": "2026-10-15 14:34:04",
+        "sys_id": "0e1709c483401310d9ffe270ceaad304",
+        "sys_mod_count": "0",
+        "sys_name": "x_2221323_loan_p_0.max_request_amount",
+        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_policy": "",
+        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_tags": "",
+        "sys_update_name": "sys_properties_0e1709c483401310d9ffe270ceaad304",
+        "sys_updated_by": "admin",
+        "sys_updated_on": "2026-10-15 14:34:04",
+        "type": "integer",
+        "value": "100000000",
+        "write_roles": ""
+      }
+    ],
+    "sys_script": [
+      {
+        "active": "true",
+        "collection": "x_2221323_loan_p_0_request",
+        "condition": "",
+        "name": "融資事前審査 ステータス遷移の強制",
+        "order": "200",
+        "script": "/**\n * ステータス遷移の強制(roadmap 1-2)\n * テーブル: x_2221323_loan_p_0_request / タイミング: before update\n *\n * ルール:\n *  - ステータス変更は審査担当者(loan_underwriter)のみ可能\n *  - 許可される遷移:\n *      received    -> reviewing | rejected\n *      reviewing   -> conditional | approved | rejected\n *      conditional -> approved | rejected\n *    (approved / rejected は終点)\n */\n(function executeRule(current, previous /*null when async*/) {\n\n  // GlideElement のままだと == / indexOf が値ではなくオブジェクト比較になるため文字列化する\n  var from = String(previous ? previous.status : current.status);\n  var to = String(current.status);\n  if (from == to) {\n    return; // ステータス変更なし\n  }\n\n  if (!gs.hasRole('x_2221323_loan_p_0.loan_underwriter')) {\n    gs.addErrorMessage('ステータスの変更は審査担当者のみ行えます。');\n    current.setAbortAction(true);\n    return;\n  }\n\n  var allowed = {\n    received: ['reviewing', 'rejected'],\n    reviewing: ['conditional', 'approved', 'rejected'],\n    conditional: ['approved', 'rejected']\n  };\n\n  if (!allowed[from] || allowed[from].indexOf(to) < 0) {\n    gs.addErrorMessage('ステータスを「' + from + '」から「' + to + '」へ変更することはできません。');\n    current.setAbortAction(true);\n  }\n\n})(current, previous);\n",
+        "sys_id": "0427010883401310d9ffe270ceaad322",
+        "when": "before"
+      },
+      {
+        "active": "true",
+        "collection": "x_2221323_loan_p_0_request",
+        "condition": "",
+        "name": "融資事前審査 入力検証",
+        "order": "100",
+        "script": "/**\n * 融資事前審査 入力検証(roadmap 1-1)\n * テーブル: x_2221323_loan_p_0_request / タイミング: before insert & update\n *\n * 検証内容:\n *  - 融資希望金額は 0 < 金額 <= 上限プロパティ(x_2221323_loan_p_0.max_request_amount)\n *  - 年収は未入力可、入力する場合は 0 より大きい\n *  - 顧客名は空白以外必須\n */\n(function executeRule(current, previous /*null when async*/) {\n\n  var MAX = parseInt(gs.getProperty('x_2221323_loan_p_0.max_request_amount', '100000000'), 10);\n\n  // GlideElement は空でもオブジェクトとして truthy になるため、必ず文字列化して判定する\n  var amount = parseFloat(String(current.requested_amount) || 0);\n  if (!(amount > 0)) {\n    gs.addErrorMessage('融資希望金額は0より大きい金額を入力してください。');\n    current.setAbortAction(true);\n  } else if (amount > MAX) {\n    gs.addErrorMessage('融資希望金額が上限(' + MAX + '円)を超えています。');\n    current.setAbortAction(true);\n  }\n\n  if (!current.annual_income.nil() && !(parseFloat(String(current.annual_income)) > 0)) {\n    gs.addErrorMessage('年収は0より大きい金額を入力してください。');\n    current.setAbortAction(true);\n  }\n\n  if (!String(current.customer_name || '').trim()) {\n    gs.addErrorMessage('顧客名は必須です。');\n    current.setAbortAction(true);\n  }\n\n})(current, previous);\n",
+        "sys_id": "0427cdc483401310d9ffe270ceaad3f7",
+        "when": "before"
+      }
+    ],
+    "sys_script_client": [],
+    "sys_script_include": [],
+    "sys_security_acl": [
+      {
+        "active": "true",
+        "admin_overrides": "true",
+        "advanced": "false",
+        "condition": "",
+        "description": "",
+        "name": "x_2221323_loan_p_0_request",
+        "operation": "read",
+        "script": "",
+        "sys_id": "0ccc7d1a5f4e44a69d5897faf6d2fdfa",
+        "type": "record"
+      },
+      {
+        "active": "true",
+        "admin_overrides": "true",
+        "advanced": "false",
+        "condition": "",
+        "description": "",
+        "name": "x_2221323_loan_p_0_request",
+        "operation": "write",
+        "script": "",
+        "sys_id": "11296ad78e5f4caa9d12b7700eb8b0ca",
+        "type": "record"
+      },
+      {
+        "active": "true",
+        "admin_overrides": "true",
+        "advanced": "false",
+        "condition": "",
+        "description": "",
+        "name": "x_2221323_loan_p_0_request",
+        "operation": "delete",
+        "script": "",
+        "sys_id": "112da6137acf4111bce3d42910ada0bf",
+        "type": "record"
+      },
+      {
+        "active": "true",
+        "admin_overrides": "true",
+        "advanced": "false",
+        "condition": "",
+        "description": "",
+        "name": "x_2221323_loan_p_0_request",
+        "operation": "create",
+        "script": "",
+        "sys_id": "ac698d7004db407a8a9e8f1a8de7c52e",
+        "type": "record"
+      }
+    ],
+    "sys_security_acl_role": [
+      {
+        "sys_class_name": "sys_security_acl_role",
+        "sys_created_by": "admin",
+        "sys_created_on": "2026-10-14 05:37:38",
+        "sys_id": "1a6ec1d65e884aed963dd26642f20c61",
+        "sys_mod_count": "0",
+        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_underwriter",
+        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_policy": "",
+        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_security_acl": "112da6137acf4111bce3d42910ada0bf",
+        "sys_tags": "",
+        "sys_update_name": "sys_security_acl_role_1a6ec1d65e884aed963dd26642f20c61",
+        "sys_updated_by": "admin",
+        "sys_updated_on": "2026-10-14 05:37:38",
+        "sys_user_role": "52eae26be5b649fb96f18d9d53430737",
+        "transaction_id": ""
+      },
+      {
+        "sys_class_name": "sys_security_acl_role",
+        "sys_created_by": "admin",
+        "sys_created_on": "2026-10-14 05:37:38",
+        "sys_id": "2428a78ca690459db265f7610d8395c4",
+        "sys_mod_count": "0",
+        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_applicant",
+        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_policy": "",
+        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_security_acl": "0ccc7d1a5f4e44a69d5897faf6d2fdfa",
+        "sys_tags": "",
+        "sys_update_name": "sys_security_acl_role_2428a78ca690459db265f7610d8395c4",
+        "sys_updated_by": "admin",
+        "sys_updated_on": "2026-10-14 05:37:38",
+        "sys_user_role": "821db60a803f4bbe8b375af020c40583",
+        "transaction_id": ""
+      },
+      {
+        "sys_class_name": "sys_security_acl_role",
+        "sys_created_by": "admin",
+        "sys_created_on": "2026-10-14 05:37:38",
+        "sys_id": "2953b481ab0e4ca0971eec8f4a352de2",
+        "sys_mod_count": "0",
+        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_underwriter",
+        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_policy": "",
+        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_security_acl": "ac698d7004db407a8a9e8f1a8de7c52e",
+        "sys_tags": "",
+        "sys_update_name": "sys_security_acl_role_2953b481ab0e4ca0971eec8f4a352de2",
+        "sys_updated_by": "admin",
+        "sys_updated_on": "2026-10-14 05:37:38",
+        "sys_user_role": "52eae26be5b649fb96f18d9d53430737",
+        "transaction_id": ""
+      },
+      {
+        "sys_class_name": "sys_security_acl_role",
+        "sys_created_by": "admin",
+        "sys_created_on": "2026-10-14 05:37:38",
+        "sys_id": "54bec680775b441eb85202b282f10e01",
+        "sys_mod_count": "0",
+        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_applicant",
+        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_policy": "",
+        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_security_acl": "ac698d7004db407a8a9e8f1a8de7c52e",
+        "sys_tags": "",
+        "sys_update_name": "sys_security_acl_role_54bec680775b441eb85202b282f10e01",
+        "sys_updated_by": "admin",
+        "sys_updated_on": "2026-10-14 05:37:38",
+        "sys_user_role": "821db60a803f4bbe8b375af020c40583",
+        "transaction_id": ""
+      },
+      {
+        "sys_class_name": "sys_security_acl_role",
+        "sys_created_by": "admin",
+        "sys_created_on": "2026-10-14 05:37:38",
+        "sys_id": "80dda8774c1a4893a3cb3e1425c52a4f",
+        "sys_mod_count": "0",
+        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_underwriter",
+        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_policy": "",
+        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_security_acl": "0ccc7d1a5f4e44a69d5897faf6d2fdfa",
+        "sys_tags": "",
+        "sys_update_name": "sys_security_acl_role_80dda8774c1a4893a3cb3e1425c52a4f",
+        "sys_updated_by": "admin",
+        "sys_updated_on": "2026-10-14 05:37:38",
+        "sys_user_role": "52eae26be5b649fb96f18d9d53430737",
+        "transaction_id": ""
+      },
+      {
+        "sys_class_name": "sys_security_acl_role",
+        "sys_created_by": "admin",
+        "sys_created_on": "2026-10-14 05:37:38",
+        "sys_id": "ab4bf2c7feab44309da127a4e929225b",
+        "sys_mod_count": "0",
+        "sys_name": "x_2221323_loan_p_0_request.x_2221323_loan_p_0.loan_underwriter",
+        "sys_package": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_policy": "",
+        "sys_scope": "ea814ae7833f8310d9ffe270ceaad302",
+        "sys_security_acl": "11296ad78e5f4caa9d12b7700eb8b0ca",
+        "sys_tags": "",
+        "sys_update_name": "sys_security_acl_role_ab4bf2c7feab44309da127a4e929225b",
+        "sys_updated_by": "admin",
+        "sys_updated_on": "2026-10-14 05:37:38",
+        "sys_user_role": "52eae26be5b649fb96f18d9d53430737",
+        "transaction_id": ""
+      }
+    ],
+    "sys_ui_action": [],
+    "sys_ui_macro": [],
+    "sys_ui_page": [],
+    "sys_user_role": [
+      {
+        "description": "Loan Underwriter (審査担当者) — can review, edit, and decide on loan pre-screening requests.",
+        "name": "x_2221323_loan_p_0.loan_underwriter",
+        "suffix": "loan_underwriter",
+        "sys_id": "52eae26be5b649fb96f18d9d53430737"
+      },
+      {
+        "description": "Loan Applicant (営業担当者) — can create and view loan pre-screening requests.",
+        "name": "x_2221323_loan_p_0.loan_applicant",
+        "suffix": "loan_applicant",
+        "sys_id": "821db60a803f4bbe8b375af020c40583"
+      }
+    ],
+    "sysevent_email_action": []
+  }
 }
