@@ -110,6 +110,22 @@ test results, and commit hash back on it when the work is done.
 3. For larger changes, also export an Update Set (or application XML), save the XML file to `update-sets/`, and commit it
 4. Plan the next development task
 
+### Mirroring to GitLab
+
+The repository has two remotes: `origin` is the GitHub repository, and `gitlab` is a private
+GitLab mirror (`git@gitlab.com:trustyon-group-for-factory/servicenow-pdi-for-factory.git`, over SSH).
+
+```
+git push origin main     # GitHub
+git push gitlab main     # GitLab mirror
+```
+
+- GitLab protects `main`, so a force push is rejected by default. If the histories ever diverge,
+  temporarily allow force push in Settings → Repository → Protected branches, push, then turn it back on.
+- SSH uses `~/.ssh/id_ed25519_gitlab` (see the `Host gitlab.com` entry in `~/.ssh/config`).
+- The `glab` CLI is installed, but it has no API token yet, so merge requests and issues cannot be
+  managed from here.
+
 ### Exporting the app (scoped application)
 
 #### Option A: Application XML (the whole app at once)
@@ -235,6 +251,21 @@ python3 scripts/run_tests.py     # ロール別の回帰テスト
 3. 大きな変更は Update Set(またはアプリケーションXML)としてもエクスポートし、
    XML ファイルを `update-sets/` に保存してコミットする
 4. 次の開発タスクを計画する
+
+### GitLab へのミラー
+
+リモートは2つある。`origin` が GitHub、`gitlab` が GitLab の非公開ミラー
+(`git@gitlab.com:trustyon-group-for-factory/servicenow-pdi-for-factory.git`、SSH 経由)。
+
+```
+git push origin main     # GitHub
+git push gitlab main     # GitLab ミラー
+```
+
+- GitLab の `main` は保護ブランチのため、force push は既定で拒否される。履歴が分かれた場合は
+  Settings → Repository → Protected branches で一時的に force push を許可し、push 後に元に戻す。
+- SSH 鍵は `~/.ssh/id_ed25519_gitlab`(`~/.ssh/config` の `Host gitlab.com` を参照)。
+- `glab` CLI はインストール済みだが API トークン未設定のため、MR や issue の操作はまだできない。
 
 ### アプリのエクスポート手順(スコープドアプリの場合)
 

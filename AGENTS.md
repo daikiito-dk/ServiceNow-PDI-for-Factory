@@ -32,6 +32,14 @@ ServiceNow PDI 上のスコープドアプリ「Loan Pre-Screening Management」
 4. ステータスを更新する(着手中 = 進行中、完了 = 完了)。Jira への書き込みは実行前に内容をユーザーに示して了承を得る
 5. チケットの無い作業を依頼された場合は、先にチケットを作るか、既存チケットへの追記かをユーザーに確認する
 
+## リモートと push
+
+- `origin` … GitHub(https://github.com/daikiito-dk/ServiceNow-PDI-for-Factory)。主リポジトリ
+- `gitlab` … GitLab のミラー(`git@gitlab.com:trustyon-group-for-factory/servicenow-pdi-for-factory.git`、非公開、SSH)
+- push はユーザーの了承を得てから行う。両方に反映する場合は `git push origin main` と `git push gitlab main` を個別に実行する
+- GitLab の `main` は保護ブランチのため force push は拒否される。必要なときはユーザーに一時許可を依頼し、完了後に戻してもらう
+- SSH 鍵は `~/.ssh/id_ed25519_gitlab`。`glab` はインストール済みだが API トークン未設定のため、MR / issue 操作はできない
+
 ## ServiceNow 固有の注意点
 
 - **スコープ**: Table API はペイロードの `sys_scope` を無視し、セッションの「現在のアプリ」で決まる。
