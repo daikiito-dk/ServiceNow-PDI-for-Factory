@@ -99,6 +99,10 @@ python3 scripts/run_tests.py     # Role-based regression tests
 
 ### Development workflow
 
+Development tasks are tracked in Jira (project **KAN** "for Factory"). Each roadmap item in
+`docs/roadmap.md` maps to a ticket key. Read the ticket first, then comment the applied records,
+test results, and commit hash back on it when the work is done.
+
 1. Change the manifests and scripts under `app/` and apply them to the PDI with `apply_records.py`
    (see `AGENTS.md` and `.factory/skills/servicenow-change/SKILL.md` for details)
 2. Test with `python3 scripts/run_tests.py`, take a snapshot with `python3 scripts/inspect_app.py`,
@@ -196,8 +200,6 @@ ServiceNow-PDI-for-Factory/
 
 ### リポジトリからPDIへの変更適用
 
-ブラウザでServiceNowにログインした状態で実行する:
-
 ```
 python3 scripts/apply_records.py app/phase1/manifest.json
 ```
@@ -206,7 +208,7 @@ python3 scripts/apply_records.py app/phase1/manifest.json
   Table APIはリクエストで指定した `sys_scope` を無視し、セッションの現在のアプリで
   スコープを決めるため、この切り替えをしないとglobalスコープに作成されてしまう。
 - `lookup` に一致するレコードがあれば更新し、なければ作成する。何度実行しても結果は同じ。
-- 適用後は `python3 scripts/snapshot_via_browser.py` を実行し、`git diff` で差分を確認する。
+- 適用後はテストを実行してスナップショットを取り直し、`git diff` で差分を確認する。
 
 ### 連携ユーザーとテスト
 
@@ -222,6 +224,10 @@ python3 scripts/run_tests.py     # ロール別の回帰テスト
   ブラウザで昇格した後に `.env` に `SN_TRANSPORT=browser` を一時的に追加して `apply_records.py` を実行する。
 
 ### 開発ワークフロー
+
+開発タスクは Jira(プロジェクト **KAN**「for Factory」)で管理する。`docs/roadmap.md` の各項目には
+対応するチケットキーを記載している。着手時にチケットを読み、完了時に適用したレコード・テスト結果・
+コミットハッシュをチケットへコメントする。
 
 1. `app/` のマニフェストとスクリプトを変更し、`apply_records.py` でPDIに適用する
    (詳細は `AGENTS.md` と `.factory/skills/servicenow-change/SKILL.md`)
