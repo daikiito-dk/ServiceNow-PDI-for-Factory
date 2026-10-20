@@ -21,6 +21,17 @@ ServiceNow PDI 上のスコープドアプリ「Loan Pre-Screening Management」
 4. `python3 scripts/inspect_app.py` でスナップショットを更新し、`git diff docs/` で意図した差分だけか確認する
 5. `docs/app-design.md` など関連ドキュメントを更新してからコミットする
 
+## チケット駆動の作業(Jira)
+
+タスクは Jira プロジェクト **KAN**「for Factory」(https://trustyon.atlassian.net/browse/KAN)で管理する。
+エピックはフェーズ1 = KAN-4、フェーズ2 = KAN-6、フェーズ3 = KAN-5。各タスクのキーは `docs/roadmap.md` に対応表がある。
+
+1. 依頼されたら、まず Jira のチケットを読む(`jira__get_issue` / `jira__search_issues` で `project = KAN`)。要件と受け入れ条件を確認する
+2. チケットのキーを控え、上記「変更の手順」に沿って実装・適用・テストを行う
+3. 結果をチケットにコメントする(適用したレコード、テスト結果の件数、スナップショット差分、コミットハッシュ)。コミットメッセージに `KAN-<n>` を含める
+4. ステータスを更新する(着手中 = 進行中、完了 = 完了)。Jira への書き込みは実行前に内容をユーザーに示して了承を得る
+5. チケットの無い作業を依頼された場合は、先にチケットを作るか、既存チケットへの追記かをユーザーに確認する
+
 ## ServiceNow 固有の注意点
 
 - **スコープ**: Table API はペイロードの `sys_scope` を無視し、セッションの「現在のアプリ」で決まる。
