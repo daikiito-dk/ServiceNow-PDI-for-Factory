@@ -2,7 +2,7 @@
 
 > このファイルは `scripts/inspect_app.py` が自動生成します。手動で編集しないでください。
 
-- 生成日時(UTC): 2026-10-15T14:54:42.367687+00:00
+- 生成日時(UTC): 2026-10-20T15:03:25.388255+00:00
 - インスタンス: dev274447.service-now.com
 - アプリ: Loan Pre-Screening Management (scope: `x_2221323_loan_p_0`, version: 1.0.0)
 

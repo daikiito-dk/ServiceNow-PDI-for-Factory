@@ -6,11 +6,11 @@
     "short_description": "銀行・金融機関向けの融資事前審査リクエスト管理アプリケーション。営業担当者が融資事前審査申請を登録し、審査部門がリスク評価・承認判定を行う。1,000万円以上は二段階承認へルーティング。",
     "sys_created_on": "2026-10-14 05:32:27",
     "sys_id": "ea814ae7833f8310d9ffe270ceaad302",
-    "sys_updated_on": "2026-10-14 05:32:27",
+    "sys_updated_on": "2026-10-20 14:48:10",
     "version": "1.0.0"
   },
   "errors": {},
-  "fetched_at": "2026-10-15T14:54:42.367687+00:00",
+  "fetched_at": "2026-10-20T15:03:25.388255+00:00",
   "glossary": {
     "glide_objects": {
       "0327382ac611228101bb3e9aaa3b3f11": "password2",
@@ -644,7 +644,7 @@
         "condition": "",
         "name": "融資事前審査 入力検証",
         "order": "100",
-        "script": "/**\n * 融資事前審査 入力検証(roadmap 1-1)\n * テーブル: x_2221323_loan_p_0_request / タイミング: before insert & update\n *\n * 検証内容:\n *  - 融資希望金額は 0 < 金額 <= 上限プロパティ(x_2221323_loan_p_0.max_request_amount)\n *  - 年収は未入力可、入力する場合は 0 より大きい\n *  - 顧客名は空白以外必須\n */\n(function executeRule(current, previous /*null when async*/) {\n\n  var MAX = parseInt(gs.getProperty('x_2221323_loan_p_0.max_request_amount', '100000000'), 10);\n\n  // GlideElement は空でもオブジェクトとして truthy になるため、必ず文字列化して判定する\n  var amount = parseFloat(String(current.requested_amount) || 0);\n  if (!(amount > 0)) {\n    gs.addErrorMessage('融資希望金額は0より大きい金額を入力してください。');\n    current.setAbortAction(true);\n  } else if (amount > MAX) {\n    gs.addErrorMessage('融資希望金額が上限(' + MAX + '円)を超えています。');\n    current.setAbortAction(true);\n  }\n\n  if (!current.annual_income.nil() && !(parseFloat(String(current.annual_income)) > 0)) {\n    gs.addErrorMessage('年収は0より大きい金額を入力してください。');\n    current.setAbortAction(true);\n  }\n\n  if (!String(current.customer_name || '').trim()) {\n    gs.addErrorMessage('顧客名は必須です。');\n    current.setAbortAction(true);\n  }\n\n})(current, previous);\n",
+        "script": "/**\n * 融資事前審査 入力検証(roadmap 1-1)\n * テーブル: x_2221323_loan_p_0_request / タイミング: before insert & update\n *\n * 検証内容:\n *  - 融資希望金額は 0 < 金額 <= 上限プロパティ(x_2221323_loan_p_0.max_request_amount)\n *  - 年収は未入力可、入力する場合は 0 より大きい\n *  - 顧客名は空白以外必須\n *  - 新規作成時のステータスは「申請受付(received)」のみ。未指定は可(辞書の既定値 received が入る)\n *    (作成時は全フィールドを設定できるため、承認済みの申請を直接作れないようにする)\n */\n(function executeRule(current, previous /*null when async*/) {\n\n  var MAX = parseInt(gs.getProperty('x_2221323_loan_p_0.max_request_amount', '100000000'), 10);\n\n  // GlideElement は空でもオブジェクトとして truthy になるため、必ず文字列化して判定する\n  var amount = parseFloat(String(current.requested_amount) || 0);\n  if (!(amount > 0)) {\n    gs.addErrorMessage('融資希望金額は0より大きい金額を入力してください。');\n    current.setAbortAction(true);\n  } else if (amount > MAX) {\n    gs.addErrorMessage('融資希望金額が上限(' + MAX + '円)を超えています。');\n    current.setAbortAction(true);\n  }\n\n  if (!current.annual_income.nil() && !(parseFloat(String(current.annual_income)) > 0)) {\n    gs.addErrorMessage('年収は0より大きい金額を入力してください。');\n    current.setAbortAction(true);\n  }\n\n  if (!String(current.customer_name || '').trim()) {\n    gs.addErrorMessage('顧客名は必須です。');\n    current.setAbortAction(true);\n  }\n\n  if (current.operation() == 'insert' && !current.status.nil() && String(current.status) != 'received') {\n    gs.addErrorMessage('新規の申請はステータス「申請受付」で登録してください。');\n    current.setAbortAction(true);\n  }\n\n})(current, previous);\n",
         "sys_id": "0427cdc483401310d9ffe270ceaad3f7",
         "when": "before"
       }
